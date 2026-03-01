@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Location Demo</title>
+</head>
+<body>
+
+  <h2>Send My Location</h2>
+  <button onclick="getLocation()">Send Location</button>
+
+  <script>
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(sendPosition);
+      } else {
+        alert("Geolocation not supported");
+      }
+    }
+
+    function sendPosition(position) {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+
+      fetch("/api/save-location", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ latitude, longitude })
+      })
+      .then(res => res.json())
+      .then(data => alert(data.message))
+      .catch(err => console.error(err));
+    }
+  </script>
+
+</body>
+</html>
